@@ -151,7 +151,7 @@ return Basic.Namespace{
 		)
 	);
 	Declaration = Basic.Type.Definition(
-		PEG.Immediate(
+		PEG.Debug(PEG.Immediate(
 			PEG.Sequence{
 				Syntax.Tokens{
 					Syntax.Optional(PEG.Pattern"Declaration"),
@@ -164,6 +164,6 @@ return Basic.Namespace{
 				Patterns.GetEnvironment
 			},
 			ParseDefinition
-		)
+		))
 	);
 }

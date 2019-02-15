@@ -1,7 +1,7 @@
 local Import = require"Toolbox.Import"
 
 local Vlpeg = Import.Module.Relative"Vlpeg"
-local Nested = Import.Module.Relative"Decomposable.Nested"
+local Nested = Import.Module.Relative"Objects.Nested"
 local PEG = Nested.PEG
 local Variable = PEG.Variable
 

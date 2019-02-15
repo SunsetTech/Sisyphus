@@ -19,5 +19,13 @@ return Compiler.Object(
 		Copy = function(self)
 			return (-self.Patterns).Items
 		end;
+
+		ToString = function(self)
+			local Strings = {}
+			for _, Item in pairs(self.Patterns.Items) do
+				table.insert(Strings, tostring(Item))
+			end
+			return table.concat(Strings, " ")
+		end;
 	}
 )

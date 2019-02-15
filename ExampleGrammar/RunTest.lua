@@ -17,6 +17,7 @@ local ExampleText =
 	Declaration<Greet <Data.String Phrase, Data.String Noun> Templates.Functions.Concat>Concat<^Phrase" "^Noun"!">
 >Greet"Hello""World"]]
 
+DebugOutput.Enabled = true
 print(
 	Vlpeg.Match(
 		ExampleGrammar, ExampleText, 1, {

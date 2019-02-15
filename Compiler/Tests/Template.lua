@@ -1,10 +1,10 @@
 local Import = require"Toolbox.Import"
 
 local Vlpeg = Import.Module.Relative"Vlpeg"
-local CanonicalName = Import.Module.Relative"Decomposable.CanonicalName"
-local Template = Import.Module.Relative"Decomposable.Template"
-local Aliasable = Import.Module.Relative"Decomposable.Aliasable"
-local Nested = Import.Module.Relative"Decomposable.Nested"
+local CanonicalName = Import.Module.Relative"Objects.CanonicalName"
+local Template = Import.Module.Relative"Objects.Template"
+local Aliasable = Import.Module.Relative"Objects.Aliasable"
+local Nested = Import.Module.Relative"Objects.Nested"
 
 return function()
 	local TestTemplateGrammar = Template.Grammar(

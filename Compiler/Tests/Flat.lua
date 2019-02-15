@@ -1,7 +1,7 @@
 local Import = require"Toolbox.Import"
 
 local Vlpeg = Import.Module.Relative"Vlpeg"
-local Flat = Import.Module.Relative"Decomposable.Flat"
+local Flat = Import.Module.Relative"Objects.Flat"
 
 return function()
 	local TestFlatGrammarA = Flat.Grammar{

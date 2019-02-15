@@ -1,8 +1,8 @@
 local Import = require "Toolbox.Import"
 
 local Vlpeg = Import.Module.Relative"Vlpeg"
-local Aliasable = Import.Module.Relative"Decomposable.Aliasable"
-local Nested = Import.Module.Relative"Decomposable.Nested"
+local Aliasable = Import.Module.Relative"Objects.Aliasable"
+local Nested = Import.Module.Relative"Objects.Nested"
 
 return function()
 	local TestAliasableGrammar = Aliasable.Grammar(
