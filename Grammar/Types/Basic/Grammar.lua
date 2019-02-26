@@ -22,21 +22,18 @@ return Basic.Type.Set{
 					"With",
 					Construct.ArgumentList{Variable.Canonical"Types.Basic.Grammar.Modifier"},
 					function(Grammar, Environment)
-						local GrammarCopy = -Grammar
-						
-						GrammarCopy.InitialPattern =
+						Grammar.InitialPattern =
 							PEG.Apply(
 								Construct.Centered(Variable.Canonical"Types.Basic.Grammar.Modifier"),
 								function(ModifiedGrammar)
-									ModifiedGrammar = -ModifiedGrammar
-									ModifiedGrammar.InitialPattern = -Grammar.InitialPattern
+									ModifiedGrammar.InitialPattern = Grammar.InitialPattern
 									return ModifiedGrammar
 								end
 							)
 						
 						return
-							GrammarCopy/"userdata", {
-								Grammar = GrammarCopy;
+							Grammar/"userdata", {
+								Grammar = Grammar;
 								Variables = {};
 							}
 					end
@@ -50,27 +47,28 @@ return Basic.Type.Set{
 				Construct.ArgumentList{Variable.Canonical"Types.Aliasable.Data.String"},
 				function(Filename, Environment)
 					local CurrentGrammar = Environment.Grammar
+
 					local Path = posix.realpath(Filename)
 
 					if not CurrentGrammar.Information.Files[Path] then
 						local File = io.open(Path,"r")
 						local Contents = File:read"a"
 						File:close()
-
-						local GrammarCopy = -CurrentGrammar
-						GrammarCopy.InitialPattern = Variable.Canonical"Types.Basic.Grammar.Modifier"
+						
+						local ResumePattern = CurrentGrammar.InitialPattern
+						CurrentGrammar.InitialPattern = Variable.Canonical"Types.Basic.Grammar.Modifier"
 						
 						local ModifiedGrammar = Tools.Filesystem.ChangePath(
 							Tools.Path.Join(Tools.Path.DirName(Path)),
 							Vlpeg.Match,
-							GrammarCopy/"userdata",
+							CurrentGrammar/"userdata",
 							Contents, 1, {
-								Grammar = GrammarCopy;
+								Grammar = CurrentGrammar;
 								Variables = {};
 							}
 						)
 						
-						ModifiedGrammar.InitialPattern = CurrentGrammar.InitialPattern
+						ModifiedGrammar.InitialPattern = ResumePattern
 						ModifiedGrammar.Information.Files[Path] = true
 						
 						return ModifiedGrammar

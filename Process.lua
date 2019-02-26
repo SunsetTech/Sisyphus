@@ -28,7 +28,7 @@ local Output = Tools.Filesystem.ChangePath(
 	}
 )
 for Name, Amount in pairs(Compiler.Object.TotalCopies) do
-	--print(Amount .." ".. Name .." copies created")
+	print(Amount .." ".. Name .." copies created")
 end
 local OutputFile = io.open(OutputPath, "w")
 OutputFile:write(Output .."\n")

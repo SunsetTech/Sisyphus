@@ -33,6 +33,7 @@ local function RegisterTemplates(AliasableTypes, Templates, Canonical)
 			table.insert(AliasableType.Aliases.Names, CanonicalName(Name, Canonical)())
 		end
 	end
+	return 
 end
 
 return Object(
@@ -43,7 +44,14 @@ return Object(
 		end;
 
 		Decompose = function(self) --Decomposes into an Aliasable.Grammar
-			local Copy = -self.AliasableGrammar
+			local Copy = self.AliasableGrammar
+			Copy = Aliasable.Grammar(
+				Copy.InitialPattern,
+				-Copy.AliasableTypes,
+				Copy.BasicTypes,
+				Copy.Syntax,
+				Copy.Information
+			)
 
 			RegisterTemplates(
 				Copy.AliasableTypes, 
@@ -51,7 +59,6 @@ return Object(
 				CanonicalName"Types.Aliasable.Templates"
 			)
 
-			
 			Copy.AliasableTypes.Children.Entries.Templates =
 				Aliasable.Namespace()
 				+ {
