@@ -1,0 +1,10 @@
+Prototypical version of complete concept, not recommended for use (Does not do much)
+
+TODO:
+	Speed improvements (Create less unnecessary copies)
+	Cleanup
+	Useful functional templates
+	Array types
+	Array manipulation
+	Template types (Types with a constructed parse based on arguments)
+
