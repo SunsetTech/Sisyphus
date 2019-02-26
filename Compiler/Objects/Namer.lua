@@ -62,7 +62,7 @@ return Object(
 		Merge = function(Into, From)
 			for Name, Entry in pairs(From.Entries) do
 				assert(Into.Entries[Name] == nil)
-				Into.Entries[Name] = -Entry
+				Into.Entries[Name] = Entry
 			end
 		end;
 	}

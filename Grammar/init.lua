@@ -9,7 +9,11 @@ return Template.Grammar(
 	Aliasable.Grammar(
 		Variable.Canonical"Types.Basic.Root",
 		Module.Child"Types.Aliasable",
-		Module.Child"Types.Basic"
+		Module.Child"Types.Basic",
+		nil,
+		{
+			Files = {};
+		}
 	),
 	Module.Child"Types.Templates"
 )

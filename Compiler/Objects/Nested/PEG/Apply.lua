@@ -23,7 +23,7 @@ return Object(
 		end;
 
 		ToString = function(self)
-			return self.SubPattern .."/".. self.Value
+			return tostring(self.SubPattern) .."/".. tostring(self.Value)
 		end;
 	}
 )

@@ -20,7 +20,11 @@ return Object(
 		end;
 
 		ToString = function(self)
-			return '"'.. table.concat(self.Sets,",") ..'"'
+			local Strings = {}
+			for _, Set in pairs(self.Sets) do
+				table.insert(Strings, "\27[32m".. Set .."\27[0m")
+			end
+			return '"'.. table.concat(Strings,",") ..'"'
 		end;
 	}
 )

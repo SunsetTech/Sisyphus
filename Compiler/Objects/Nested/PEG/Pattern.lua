@@ -19,7 +19,11 @@ return Object(
 		end;
 
 		ToString = function(self)
-			return tostring(self.Pattern)
+			if type(self.Pattern) == "userdata" then
+				return"\27[34m".. tostring(self.Pattern) .."\27[0m"
+			else
+				return "\27[33m".. tostring(self.Pattern):gsub("\r","\\r"):gsub("\n","\\n") .."\27[0m"
+			end
 		end;
 	}
 )

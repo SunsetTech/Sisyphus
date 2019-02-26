@@ -49,7 +49,7 @@ return Object(
 				if Into.Entries[Name] then
 					Into.Entries[Name] = Into.Entries[Name] + From.Entries[Name]
 				else
-					Into.Entries[Name] = -From.Entries[Name]
+					Into.Entries[Name] = From.Entries[Name]
 				end
 			end
 		end;

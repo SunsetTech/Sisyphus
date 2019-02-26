@@ -15,7 +15,8 @@ local Nested = {
 }
 
 
-return Object(
+local Class 
+Class = Object(
 	"Nested.Grammar", {
 		Construct = function(self, Rules, Base)
 			self.Rules = Namer({"Nested.Grammar", "Nested.Rule"}, Rules or {})
@@ -41,7 +42,7 @@ return Object(
 			
 			return 
 				Flattened
-				and Flattened + self.Base
+				and self.Base + Flattened
 				or self.Base
 		end;
 
@@ -59,7 +60,8 @@ return Object(
 				end
 			end
 			
-			Into.Rules = Into.Rules + From.Rules
+			Into.Rules = Namer({"Nested.Grammar", "Nested.Rule"},{}) + {Into.Rules, From.Rules}
 		end;
 	}
 );
+return Class

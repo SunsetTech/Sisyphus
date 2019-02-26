@@ -20,7 +20,7 @@ return Object(
 		end;
 
 		ToString = function(self)
-			return "{".. self.InnerPattern .."}"
+			return "{".. tostring(self.InnerPattern) .."}"
 		end;
 	}
 )

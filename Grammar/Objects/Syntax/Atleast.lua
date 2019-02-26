@@ -14,5 +14,9 @@ return Compiler.Object(
 		Copy = function(self)
 			return self.Amount, -self.InnerPattern
 		end;
+
+		ToString = function(self)
+			return tostring(self.InnerPattern) .."^1"
+		end;
 	}
 )

@@ -18,7 +18,7 @@ return Object(
 		end;
 
 		ToString = function(self)
-			return "(".. self.SubPattern ..")"
+			return "(".. tostring(self.SubPattern) ..")"
 		end;
 	}
 )

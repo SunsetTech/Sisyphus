@@ -2,7 +2,7 @@ local Import = require"Toolbox.Import"
 
 local Vlpeg = require"Sisyphus.Vlpeg"
 
-local Patterns = Import.Module.Sister"Patterns"
+local Static = Import.Module.Sister"Static"
 
 local Package = {}
 
@@ -18,7 +18,7 @@ Package = {
 	end;
 
 	Tokens = function(...)
-		return Package.Concatenate(Patterns.Whitespace^0, ...)
+		return Package.Concatenate(Static.Whitespace^0, ...)
 	end;
 
 	Delimited = function(Open, Pattern, Close, Joiner)
@@ -31,11 +31,11 @@ Package = {
 	end;
 
 	Centered = function(Pattern)
-		return Package.Quoted(Patterns.Whitespace^0, Pattern)
+		return Package.Quoted(Static.Whitespace^0, Pattern)
 	end;
 
 	Continuation = function(Pattern)
-		return Package.Tokens(Patterns.Nothing, Pattern)
+		return Package.Tokens(Static.Nothing, Pattern)
 	end;
 
 	Array = function(Pattern, Seperator, Joiner)

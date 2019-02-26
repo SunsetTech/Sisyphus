@@ -20,7 +20,7 @@ return Object(
 		end;
 
 		ToString = function(self)
-			return self.Pattern .."-".. self.Without
+			return tostring(self.Pattern) .."-".. tostring(self.Without)
 		end;
 	}
 )

@@ -53,8 +53,11 @@ return Object(
 
 			
 			Copy.AliasableTypes.Children.Entries.Templates =
-				(Copy.AliasableTypes.Children.Entries.Templates or Aliasable.Namespace())
-				+ self.Templates()
+				Aliasable.Namespace()
+				+ {
+					(Copy.AliasableTypes.Children.Entries.Templates or Aliasable.Namespace()),
+					self.Templates()
+				}
 			
 			return Copy
 		end;

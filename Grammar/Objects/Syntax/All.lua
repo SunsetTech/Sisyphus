@@ -14,6 +14,10 @@ return Compiler.Object(
 		Copy = function(self)
 			return -self.InnerPattern
 		end;
+
+		ToString = function(self)
+			return tostring(self.InnerPattern) .."+"
+		end;
 	}
 )
 

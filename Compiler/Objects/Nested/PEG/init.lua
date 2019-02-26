@@ -15,4 +15,5 @@ return {
 	Debug = Module.Child"Debug";
 	Table = Module.Child"Table";
 	All = Module.Child"All";
+	Set = Module.Child"Set";
 }

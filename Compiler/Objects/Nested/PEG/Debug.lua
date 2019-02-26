@@ -21,7 +21,7 @@ return Object(
 						Vlpeg.Pattern(0),
 						function(Subject, Pos)
 							DebugOutput:Format"trying to match %s"(self.SubPattern)
-							DebugOutput:Format"At [[%s]]"(Subject:sub(Pos))
+							DebugOutput:Format"  At `\27[30m%s\27[0m..`"(Subject:sub(Pos, Pos+20):gsub("\n","\27[4m\27[7m \27[0m\27[30m"))
 							DebugOutput:Push()
 							return Pos
 						end
@@ -52,7 +52,7 @@ return Object(
 		end;
 
 		ToString = function(self)
-			return "`".. self.SubPattern
+			return "`".. tostring(self.SubPattern)
 		end;
 	}
 )

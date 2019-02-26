@@ -3,6 +3,7 @@ local Compiler = require"Sisyphus.Compiler"
 return Compiler.Object(
 	"Nested.PEG.Syntax.Optional", {
 		Construct = function(self, InnerPattern)
+			assert(type(InnerPattern) ~= "string")
 			self.InnerPattern = InnerPattern
 		end;
 
@@ -12,6 +13,10 @@ return Compiler.Object(
 
 		Copy = function(self)
 			return -self.InnerPattern
+		end;
+
+		ToString = function(self)
+			return tostring(self.InnerPattern) .."?"
 		end;
 	}
 )

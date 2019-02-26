@@ -5,6 +5,5 @@ return {
 	Atleast = Module.Child"Atleast";
 	Optional = Module.Child"Optional";
 	Tokens = Module.Child"Tokens";
-	ArgumentList = Module.Child"ArgumentList";
-	ArgumentArray = Module.Child"ArgumentArray";
+	List = Module.Child"List";
 }

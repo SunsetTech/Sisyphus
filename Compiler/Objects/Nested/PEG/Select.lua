@@ -27,7 +27,11 @@ return Object(
 		end;
 
 		ToString = function(self)
-			return table.concat(self.Options.Items, "|")
+			local Strings = {}
+			for _, Item in pairs(self.Options.Items) do
+				table.insert(Strings, tostring(Item))
+			end
+			return "(".. table.concat(Strings, "|") ..")"
 		end;
 	}
 )

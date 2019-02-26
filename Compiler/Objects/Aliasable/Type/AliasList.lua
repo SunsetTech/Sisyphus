@@ -14,7 +14,7 @@ return Object(
 		Decompose = function(self)
 			local Variables = {}
 			for Index, Name in pairs(self.Names) do
-				Variables[Index] = PEG.Variable.Canonical(Name)
+				Variables[Index] = PEG.Sequence{PEG.Pattern":", PEG.Variable.Canonical(Name)}
 			end
 			return PEG.Select(Variables)
 		end;

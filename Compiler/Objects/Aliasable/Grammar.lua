@@ -11,11 +11,12 @@ local Aliasable = {
 
 return Object(
 	"Aliasable.Grammar", {
-		Construct = function(self, InitialPattern, AliasableTypes, BasicTypes, Syntax)
+		Construct = function(self, InitialPattern, AliasableTypes, BasicTypes, Syntax, Information)
 			self.InitialPattern = InitialPattern
 			self.BasicTypes = BasicTypes or Basic.Namespace()
 			self.AliasableTypes = AliasableTypes or Aliasable.Namespace()
 			self.Syntax = Syntax or Nested.Grammar()
+			self.Information = Information or {}
 		end;
 
 		Decompose = function(self)
@@ -30,7 +31,7 @@ return Object(
 		end;
 
 		Copy = function(self)
-			return -self.InitialPattern, -self.AliasableTypes, -self.BasicTypes, -self.Syntax
+			return -self.InitialPattern, -self.AliasableTypes, -self.BasicTypes, -self.Syntax, Tools.Table.Copy(self.Information)
 		end;
 	}
 )

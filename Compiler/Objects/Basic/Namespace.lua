@@ -9,7 +9,7 @@ local Nested = Import.Module.Relative"Objects.Nested"
 return Object(
 	"Basic.Namespace", {
 		Construct = function(self, Children)
-			self.Children = Map({"Basic.Namespace", "Basic.Type.Definition"},Children or {})
+			self.Children = Map({"Basic.Namespace", "Basic.Type.Definition", "Basic.Type.Set"},Children or {})
 		end;
 
 		Decompose = function(self) --into a Nested.Grammar
@@ -22,7 +22,7 @@ return Object(
 		end;
 
 		Merge = function(Into, From)
-			Into.Children = Into.Children + From.Children
+			Into.Children = Map({"Basic.Namespace","Basic.Type.Definition","Basic.Type.Set"},{}) + {Into.Children, From.Children}
 		end;
 	}
 )

@@ -19,7 +19,7 @@ return Object(
 		end;
 
 		ToString = function(self)
-			return "[".. (self.Name or "?") .."=".. self.InnerPattern .."]"
+			return "[".. (tostring(self.Name) or "?") .."=".. tostring(self.InnerPattern) .."]"
 		end;
 	}
 )

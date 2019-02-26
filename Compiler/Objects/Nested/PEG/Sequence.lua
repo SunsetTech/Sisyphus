@@ -25,7 +25,7 @@ return Object(
 			for _, Part in pairs(self.Parts.Items) do
 				table.insert(Strings, tostring(Part))
 			end
-			return table.concat(Strings,"*")
+			return table.concat(Strings,"")
 		end;
 	}
 )

@@ -1,6 +1,7 @@
 local Module = require"Toolbox.Import.Module"
 
 return {
-	Patterns = Module.Child"Patterns";
 	Syntax = Module.Child"Syntax";
+	Construct = Module.Child"Construct";
+	Static = Module.Child"Static";
 }
