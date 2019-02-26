@@ -68,50 +68,6 @@ return setmetatable(
 								Class.TotalCopies[type(self)] = (Class.TotalCopies[type(self)] or 0) + 1
 								Class.TotalCopies._All_ = (Class.TotalCopies._All_ or 0) + 1
 							return NewInstance(Definition.Copy(self))
-							--[[local Copied = false
-							local Current = self
-							local function ResolveCopy()
-								Current = NewInstance(Definition.Copy(self))
-								Copied = true
-							end
-							return setmetatable(
-								{}, {
-									__type = function(_)
-										--if not Copied then ResolveCopy() end
-										return type(Current)
-									end;
-									__index = function(_, Key)
-										if not Copied then ResolveCopy() end
-										return Current[Key]
-									end;
-									__newindex = function(_, Key, Value)
-										if not Copied then ResolveCopy() end
-										Current[Key] = Value
-									end;
-									__call = function(_,...)
-										if not Copied then ResolveCopy() end
-										return Current(...)
-									end;
-									__unm = function(_)
-										if Copied then
-											return -Current
-										else
-											return _
-										end
-									end;
-									__add = function(_, Additions)
-										return Current + Additions
-									end;
-									__mod = function(_, TypeQuery)
-										--if not Copied then ResolveCopy() end
-										return Current%TypeQuery
-									end;
-									__div = function(_, Type)
-										--if not Copied then ResolveCopy() end
-										return Current/Type
-									end;
-								}
-							)]]
 						end;
 						
 						__add = function(self, Additions) --Merge

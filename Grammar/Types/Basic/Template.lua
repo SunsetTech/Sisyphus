@@ -65,7 +65,7 @@ function DefinitionGenerator(Name, Parameters, Basetype)
 					PEG.Sequence{
 						Static.GetEnvironment,
 						Syntax.Tokens{
-							Syntax.Optional(PEG.Pattern(Name.Name)),
+							PEG.Optional(PEG.Pattern(Name.Name)),
 							CreateArgumentsPattern(Parameters),
 						}
 					},
@@ -78,7 +78,6 @@ function DefinitionGenerator(Name, Parameters, Basetype)
 						end
 						local Returns = {Finish(Environment)}
 						for Name, Value in pairs(OldValues) do
-							print("Restoring ".. tostring(Name) .." to ".. tostring(Value))
 							Environment.Variables[Name] = Value
 						end
 						return table.unpack(Returns)
@@ -119,14 +118,18 @@ local function CreateParameterNamespace(Parameters)
 end
 
 local function GenerateDefinitionGrammar(Name, Parameters, Basetype, Environment)
-	local CurrentAliasableGrammar = -Environment.Grammar --Copy the current grammar
+	local CurrentAliasableGrammar = Environment.Grammar --Copy the current grammar
 	
 	local BasetypeRule = CanonicalName(InvertName(Basetype)(), CanonicalName"Types.Aliasable")()
 
+	local ResumePattern = CurrentAliasableGrammar.InitialPattern
 	CurrentAliasableGrammar.InitialPattern = PEG.Apply( --Edit the initial pattern to match Basetype
 		PEG.Apply(
 			Variable.Canonical(BasetypeRule), --The returns matching the type, either values or a resolvable representing the unfinished transform
-			BoxReturns --Box them to finish at template invocation
+			function(...)
+				CurrentAliasableGrammar.InitialPattern = ResumePattern
+				return BoxReturns(...) --Box them to finish at template invocation
+			end
 		),
 		DefinitionGenerator(Name, Parameters, Basetype)
 	)

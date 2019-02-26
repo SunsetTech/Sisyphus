@@ -13,7 +13,7 @@ return Template.Namespace{
 	Join = Template.Definition(
 		Compiler.Objects.CanonicalName("Data",Compiler.Objects.CanonicalName"String"),
 		Syntax.Tokens{
-			Syntax.Optional(PEG.Pattern"Join"), 
+			PEG.Optional(PEG.Pattern"Join"), 
 			Construct.ArgumentArray(Variable.Canonical"Types.Aliasable.Data.String")
 		},
 		function(...)

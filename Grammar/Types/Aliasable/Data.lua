@@ -20,7 +20,7 @@ return Aliasable.Namespace {
 			Open = Variable.Sibling"Delimiter";
 			Close = Variable.Sibling"Delimiter";
 			Contents = PEG.Capture(
-				Syntax.All(
+				PEG.All(
 					PEG.Dematch(
 						PEG.Pattern(1),
 						Variable.Sibling"Delimiter"

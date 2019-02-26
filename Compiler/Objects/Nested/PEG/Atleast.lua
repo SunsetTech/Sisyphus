@@ -1,7 +1,9 @@
-local Compiler = require"Sisyphus.Compiler"
+local Import = require"Toolbox.Import"
 
-return Compiler.Object(
-	"Nested.PEG.Syntax.Atleast", {
+local Object = Import.Module.Relative"Compiler.Object"
+
+return Object(
+	"Nested.PEG.Atleast", {
 		Construct = function(self, Amount, InnerPattern)
 			self.Amount = Amount
 			self.InnerPattern = InnerPattern
@@ -16,7 +18,7 @@ return Compiler.Object(
 		end;
 
 		ToString = function(self)
-			return tostring(self.InnerPattern) .."^1"
+			return tostring(self.InnerPattern) .."^".. self.Amount
 		end;
 	}
 )

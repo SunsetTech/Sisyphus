@@ -55,12 +55,12 @@ Package = {
 	end;
 
 	Centered = function(Pattern)
-		return Package.Quoted(Syntax.All(Static.Whitespace), Pattern)
+		return Package.Quoted(PEG.All(Static.Whitespace), Pattern)
 	end;
 	
 	Array = function(Pattern, Seperator, Joiner)
 		Joiner = Joiner or Syntax.Tokens
-		return Joiner{Pattern, Syntax.All(Joiner{Seperator, Pattern})}
+		return Joiner{Pattern, PEG.All(Joiner{Seperator, Pattern})}
 	end;
 	
 	ArgumentArray = function(ArgumentPattern)
@@ -68,14 +68,14 @@ Package = {
 			PEG.Pattern"<",
 			Package.Array(
 				ArgumentPattern,
-				Package.Centered(Syntax.Optional(PEG.Pattern","))
+				Package.Centered(PEG.Optional(PEG.Pattern","))
 			),
 			PEG.Pattern">"
 		)
 	end;
 
 	ArgumentList = function(Patterns)
-		local Undelimited = Syntax.List(Patterns, Package.Centered(Syntax.Optional(PEG.Pattern(","))))
+		local Undelimited = Syntax.List(Patterns, Package.Centered(PEG.Optional(PEG.Pattern(","))))
 		local Delimited = Package.Delimited(
 			PEG.Pattern"<",
 			Undelimited,

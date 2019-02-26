@@ -15,5 +15,7 @@ return {
 	Debug = Module.Child"Debug";
 	Table = Module.Child"Table";
 	All = Module.Child"All";
+	Atleast = Module.Child"Atleast";
+	Optional = Module.Child"Optional";
 	Set = Module.Child"Set";
 }

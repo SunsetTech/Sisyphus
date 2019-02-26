@@ -1,7 +1,9 @@
-local Compiler = require"Sisyphus.Compiler"
+local Import = require"Toolbox.Import"
 
-return Compiler.Object(
-	"Nested.PEG.Syntax.Optional", {
+local Object = Import.Module.Relative"Compiler.Object"
+
+return Object(
+	"Nested.PEG.Optional", {
 		Construct = function(self, InnerPattern)
 			assert(type(InnerPattern) ~= "string")
 			self.InnerPattern = InnerPattern

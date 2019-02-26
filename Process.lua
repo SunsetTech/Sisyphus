@@ -3,7 +3,7 @@ local Tools = require"Toolbox.Tools"
 
 local DebugOutput = require"Toolbox.Debug.Registry".GetDefaultPipe()
 DebugOutput.IncludeSource = false
-DebugOutput.Enabled = true
+DebugOutput.Enabled = false
 
 local Vlpeg = require"Sisyphus.Vlpeg"
 local Compiler = require"Sisyphus.Compiler"
@@ -28,7 +28,7 @@ local Output = Tools.Filesystem.ChangePath(
 	}
 )
 for Name, Amount in pairs(Compiler.Object.TotalCopies) do
-	print(Amount .." ".. Name .." copies created")
+	--print(Amount .." ".. Name .." copies created")
 end
 local OutputFile = io.open(OutputPath, "w")
 OutputFile:write(Output .."\n")

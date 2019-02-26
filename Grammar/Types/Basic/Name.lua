@@ -7,17 +7,18 @@ local PEG = Nested.PEG
 local Variable = PEG.Variable
 
 local Syntax = Import.Module.Relative"Objects.Syntax"
+local Construct = Import.Module.Relative"Objects.Construct"
 local Static = Import.Module.Relative"Objects.Static"
 
 local Vlpeg = require"Sisyphus.Vlpeg"
 
 return Basic.Namespace{
 	Part = Basic.Type.Definition(
-		PEG.Capture(Syntax.Atleast(1, Static.Alpha))
+		PEG.Capture(PEG.Atleast(1, Static.Alpha))
 	);
 	
 	Specifier = Basic.Type.Definition(
-		Syntax.Array(Variable.Canonical"Types.Basic.Name.Part", PEG.Pattern".", Vlpeg.Sequence)
+		Construct.Array(Variable.Canonical"Types.Basic.Name.Part", PEG.Pattern".", PEG.Sequence)
 	);
 
 	Canonical = Basic.Type.Definition(
