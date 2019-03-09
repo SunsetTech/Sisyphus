@@ -20,5 +20,10 @@ return Object(
 		Copy = function(self)
 			return (-self.Children).Entries, self.Base
 		end;
+
+		Merge = function(Into, From)
+			Into.Base = Into.Base + From.Base
+			Into.Children = Into.Children + From.Children
+		end
 	}
 )

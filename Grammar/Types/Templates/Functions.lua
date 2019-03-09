@@ -12,12 +12,12 @@ local Construct = Import.Module.Relative"Objects.Construct"
 return Template.Namespace{
 	Join = Template.Definition(
 		Compiler.Objects.CanonicalName("Data",Compiler.Objects.CanonicalName"String"),
-		Syntax.Tokens{
+		PEG.Debug(Syntax.Tokens{
 			PEG.Optional(PEG.Pattern"Join"), 
-			Construct.ArgumentArray(Variable.Canonical"Types.Aliasable.Data.String")
-		},
-		function(...)
-			return table.concat{...}
+			Variable.Canonical"Types.Aliasable.Data.Array<Data.String>"
+		}),
+		function(Arguments)
+			return table.concat(Arguments)
 		end
 	);
 }

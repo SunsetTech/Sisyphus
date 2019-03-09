@@ -17,5 +17,8 @@ return Object(
 				and self.Namespace() ..".".. self.Name
 				or self.Name
 		end;
+		Copy = function(self)
+			return self.Name, self.Namespace and -self.Namespace or nil
+		end;
 	}
 )

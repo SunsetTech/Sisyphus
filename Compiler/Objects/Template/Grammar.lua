@@ -14,10 +14,10 @@ local function LookupAliasableType(In, Canonical)
 		if In%"Aliasable.Namespace" then
 			return LookupAliasableType(In.Children.Entries[Canonical.Name], Canonical.Namespace)
 		else
-			Tools.Error.CallerError(Tools.String.Format"Can't lookup %s in %s"(Canonical.Name, In),1)
+			Tools.Error.CallerError(Tools.String.Format"Can't lookup %s in %s"(Canonical.Name, In))
 		end
 	else
-		Tools.Error.CallerAssert(In%"Aliasable.Type.Definition", "Didnt find an aliasable type")
+		Tools.Error.CallerAssert(In and In%"Aliasable.Type.Definition", "Didnt find an aliasable type, got ".. tostring(In))
 		return In
 	end
 end
@@ -25,10 +25,10 @@ end
 local function RegisterTemplates(AliasableTypes, Templates, Canonical)
 	for Name, Entry in pairs(Templates.Children.Entries) do
 		if Entry%"Template.Namespace" then
-			RegisterTemplates(AliasableTypes, Entry, CanonicalName(Name, Canonical))
+			Tools.Error.NotMine(RegisterTemplates,AliasableTypes, Entry, CanonicalName(Name, Canonical))
 		elseif Entry%"Template.Definition" then
 			assert(Entry.Basetype)
-			local AliasableType = LookupAliasableType(AliasableTypes, Entry.Basetype)
+			local AliasableType = Tools.Error.NotMine(LookupAliasableType,AliasableTypes, Entry.Basetype)
 			assert(AliasableType%"Aliasable.Type.Definition")
 			table.insert(AliasableType.Aliases.Names, CanonicalName(Name, Canonical)())
 		end
@@ -53,7 +53,7 @@ return Object(
 				Copy.Information
 			)
 
-			RegisterTemplates(
+			Tools.Error.NotMine(RegisterTemplates,
 				Copy.AliasableTypes, 
 				self.Templates,
 				CanonicalName"Types.Aliasable.Templates"

@@ -6,6 +6,7 @@ local Import = require"Toolbox.Import"
 local Vlpeg = require"Sisyphus.Vlpeg"
 local Compiler = require"Sisyphus.Compiler"
 local Template = Compiler.Objects.Template
+local Aliasable = Compiler.Objects.Aliasable
 local Basic = Compiler.Objects.Basic
 local PEG = Compiler.Objects.Nested.PEG
 local Variable = PEG.Variable
@@ -82,11 +83,41 @@ return Basic.Type.Set{
 		Templates = Basic.Type.Definition(
 			Construct.Invocation(
 				"Templates",
-				PEG.Table(Construct.ArgumentArray(Variable.Canonical"Types.Basic.Template.Declaration")),
+				PEG.Table(
+					Construct.ArgumentArray(
+						PEG.Apply(
+							Variable.Canonical"Types.Basic.Template.Declaration",
+							function(Namespace, GeneratedTypes)
+								return {
+									Namespace = Namespace;
+									GeneratedTypes = GeneratedTypes;
+								}
+							end
+						)
+					)
+				),
 				function(Declarations, Environment)
+					local Namespace = Template.Namespace()
+					local GeneratedTypes = Aliasable.Namespace()
+
+					for _, Declaration in pairs(Declarations) do
+						Namespace = Namespace + Declaration.Namespace
+						if Declaration.GeneratedTypes then
+							GeneratedTypes = GeneratedTypes + Declaration.GeneratedTypes
+						end
+					end
+					
+					local CurrentGrammar = Environment.Grammar
+
 					return Template.Grammar(
-						Environment.Grammar,
-						Compiler.Objects.Merger("Template.Namespace", Declarations)()
+						Aliasable.Grammar(
+							CurrentGrammar.InitialPattern,
+							CurrentGrammar.AliasableTypes + GeneratedTypes,
+							CurrentGrammar.BasicTypes,
+							CurrentGrammar.Syntax,
+							CurrentGrammar.Information
+						),
+						Namespace
 					)()
 				end
 			)

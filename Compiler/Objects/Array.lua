@@ -8,14 +8,18 @@ return Object(
 			assert(Items)
 			self.Type = Type
 			self.Items = Items
+			for Index, Item in pairs(self.Items) do
+				Tools.Error.CallerAssert(type(Index) == "number", "Expected a numeric index, got ".. Index)
+				Tools.Error.CallerAssert(Item%(self.Type), "Expected a ".. self.Type)
+			end
 		end;
 
 		Decompose = function(self, ...)
 			local Decomposed = {}
 			
 			for Index, Item in pairs(self.Items) do
-				Tools.Error.CallerAssert(type(Index) == "number", "Expected a numeric index", 1)
-				Tools.Error.CallerAssert(Item%(self.Type), "Expected a ".. self.Type, 1)
+				Tools.Error.CallerAssert(type(Index) == "number", "Expected a numeric index, got ".. Index)
+				Tools.Error.CallerAssert(Item%(self.Type), "Expected a ".. self.Type)
 			
 				Decomposed[Index] = Item(...)
 			end

@@ -28,7 +28,7 @@ return setmetatable(
 				--DebugOutput:Push()
 
 					local Data = {}
-						(Definition.Construct or function() end)(Data, ...)
+						Tools.Error.NotMine(Definition.Construct or function() end, Data, ...)
 					local New = MakeObject(Data)
 			
 				--DebugOutput:Pop()
@@ -46,7 +46,7 @@ return setmetatable(
 							--DebugOutput:Format"Decomposing a %s"(type(self))
 							--DebugOutput:Push()
 
-							local Decomposed = Definition.Decompose(self, ...)
+							local Decomposed = Tools.Error.NotMine(Definition.Decompose,self, ...)
 							
 							if getmetatable(Decomposed) then
 								getmetatable(Decomposed).__source = self; --TODO preserve during copy
@@ -111,7 +111,7 @@ return setmetatable(
 						__div = function(self, Type) -- /"Type" Iteratively decomposes until it's of Type
 							local Decomposed = self
 							while(type(Decomposed) ~= Type) do
-								Decomposed = Decomposed()
+								Decomposed = Tools.Error.NotMine(Decomposed)
 							end
 							return Decomposed
 						end;

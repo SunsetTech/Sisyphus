@@ -21,7 +21,7 @@ return Object(
 			--assert(Tools.Type.GetType(AliasableTypes) ~= "table")
 			self.AliasableTypes = AliasableTypes or Namespace()
 			self.BasicTypes = BasicTypes or Basic.Namespace()
-			self.Aliases = AliasList(Aliases)
+			self.Aliases = Tools.Error.NotMine(AliasList,Aliases)
 		end;
 
 		Decompose = function(self)
@@ -47,6 +47,11 @@ return Object(
 
 		Copy = function(self)
 			return -self.Pattern, self.Function, -self.Syntax, -self.AliasableTypes, -self.BasicTypes, (-self.Aliases).Names
+		end;
+
+		Merge = function(Into, From)
+			print("Not merging ".. tostring(Into) .." with ".. tostring(From))
+			print("TODO: fix this by dropping one of the duplicate types")
 		end;
 	}
 )

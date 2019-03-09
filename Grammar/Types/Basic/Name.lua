@@ -14,11 +14,11 @@ local Vlpeg = require"Sisyphus.Vlpeg"
 
 return Basic.Namespace{
 	Part = Basic.Type.Definition(
-		PEG.Capture(PEG.Atleast(1, Static.Alpha))
+		PEG.Debug(PEG.Capture(PEG.Atleast(1, Static.Alpha)))
 	);
 	
 	Specifier = Basic.Type.Definition(
-		Construct.Array(Variable.Canonical"Types.Basic.Name.Part", PEG.Pattern".", PEG.Sequence)
+		PEG.Debug(Construct.Array(Variable.Canonical"Types.Basic.Name.Part", PEG.Pattern".", PEG.Sequence))
 	);
 
 	Canonical = Basic.Type.Definition(

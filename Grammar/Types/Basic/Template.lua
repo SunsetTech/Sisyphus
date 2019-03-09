@@ -3,6 +3,8 @@ local Tools = require"Toolbox.Tools"
 
 local Compiler = require"Sisyphus.Compiler"
 local CanonicalName = Compiler.Objects.CanonicalName
+
+local Aliasable = Compiler.Objects.Aliasable
 local Basic = Compiler.Objects.Basic
 local Nested = Compiler.Objects.Nested
 local Template = Compiler.Objects.Template
@@ -47,7 +49,7 @@ local function CreateArgumentsPattern(Parameters)
 	for Index, Parameter in pairs(Parameters) do
 		ArgumentPatterns[Index] = Variable.Canonical(
 			Compiler.Objects.CanonicalName(
-				InvertName(Parameter.Type)(), 
+				InvertName(Parameter.Specifier.Target)(), 
 				Compiler.Objects.CanonicalName"Types.Aliasable"
 			)()
 		)
@@ -56,7 +58,7 @@ local function CreateArgumentsPattern(Parameters)
 	return Construct.ArgumentList(ArgumentPatterns)
 end
 
-function DefinitionGenerator(Name, Parameters, Basetype)
+function DefinitionGenerator(Basetype, Name, Parameters, GeneratedTypes)
 	return function(Finish)
 		return 
 			CreateNamespaceFor(
@@ -84,7 +86,8 @@ function DefinitionGenerator(Name, Parameters, Basetype)
 					end
 				),
 				Name
-			)
+			),
+			GeneratedTypes
 	end
 end
 
@@ -97,63 +100,133 @@ local function BoxReturns(...)
 	)
 end
 
-local function CreateParameterNamespace(Parameters)
-	local ParameterNamespace = Template.Namespace()
+local function CreateValueLookup(Location)
+	return function()
+		return Compiler.Transform.Resolvable(
+			function(Environment)
+				return Environment.Variables[Location]
+			end
+		)
+	end
+end
+
+local function GetParameterTypes(Parameters)
+	local Variables = Template.Namespace()
+	local GeneratedTypes = Aliasable.Namespace()
 
 	for Index, Parameter in pairs(Parameters) do
-		ParameterNamespace.Children.Entries[Parameter.Name] = Template.Definition(
-			Parameter.Type,
-			PEG.Pattern(Parameter.Name),
-			function()
-				return Compiler.Transform.Resolvable(
-					function(Environment)
-						return Environment.Variables[Parameter.Name]
-					end
-				)
-			end
+		if Parameter.Specifier.GeneratedTypes then
+			GeneratedTypes = GeneratedTypes + Parameter.Specifier.GeneratedTypes
+		end
+		Variables.Children.Entries[Parameter.Name] = Template.Definition(
+			Parameter.Specifier.Target,
+			PEG.Debug(PEG.Pattern(Parameter.Name)),
+			CreateValueLookup(Parameter.Name)
 		);
 	end
 
-	return ParameterNamespace
+	return Variables, GeneratedTypes
 end
 
+--
 local function GenerateDefinitionGrammar(Name, Parameters, Basetype, Environment)
-	local CurrentAliasableGrammar = Environment.Grammar --Copy the current grammar
-	
-	local BasetypeRule = CanonicalName(InvertName(Basetype)(), CanonicalName"Types.Aliasable")()
+	local CurrentGrammar = Environment.Grammar
 
-	local ResumePattern = CurrentAliasableGrammar.InitialPattern
-	CurrentAliasableGrammar.InitialPattern = PEG.Apply( --Edit the initial pattern to match Basetype
-		PEG.Apply(
-			Variable.Canonical(BasetypeRule), --The returns matching the type, either values or a resolvable representing the unfinished transform
-			function(...)
-				CurrentAliasableGrammar.InitialPattern = ResumePattern
-				return BoxReturns(...) --Box them to finish at template invocation
-			end
+	local Variables, GeneratedTypes = GetParameterTypes(Parameters)
+	local DefinitionGrammar = Template.Grammar(
+		Aliasable.Grammar(
+			CurrentGrammar.InitialPattern,
+			CurrentGrammar.AliasableTypes + GeneratedTypes,
+			CurrentGrammar.BasicTypes,
+			CurrentGrammar.Syntax,
+			CurrentGrammar.Information
 		),
-		DefinitionGenerator(Name, Parameters, Basetype)
-	)
-
-
-	local DefinitionTemplateGrammar = Template.Grammar(
-		CurrentAliasableGrammar,
-		CreateParameterNamespace(Parameters)
-	)
-	
-	local DefinitionAliasableGrammar = DefinitionTemplateGrammar()
-	return 
-		DefinitionAliasableGrammar/"userdata", {
-			Grammar = DefinitionAliasableGrammar;
-			Variables = {};
+		Template.Namespace{
+			Variables = Variables;
 		}
+	)/"Aliasable.Grammar"
+
+	local BasetypeRule = CanonicalName(InvertName(Basetype)(), CanonicalName"Types.Aliasable")()
+	
+	DefinitionGrammar.InitialPattern = PEG.Apply( --Edit the initial pattern to match Basetype
+		PEG.Apply(
+			PEG.Debug(Variable.Canonical(BasetypeRule)), --The returns matching the type, either values or a resolvable representing the unfinished transform
+			BoxReturns
+		),
+		DefinitionGenerator(Basetype, Name, Parameters, GeneratedTypes)
+	)
+
+	return DefinitionGrammar
+end
+
+local function LookupSpecifier(Namespace, Specifier)
+	local Result = Namespace.Children.Entries[Specifier.Name]
+
+	return 
+		Specifier.Namespace
+		and LookupSpecifier(Result, Specifier.Namespace)
+		or Result
+end
+
+local function GetSpecifierCompleter(Specifier, Environment)
+	local TypeDefinition = LookupSpecifier(Environment.Grammar.AliasableTypes, Specifier)
+	Tools.Error.CallerAssert(TypeDefinition%"Aliasable.Type.Definition" or TypeDefinition%"Aliasable.Type.Incomplete")
+	
+	local CurrentGrammar = Environment.Grammar
+	local ResumePattern = CurrentGrammar.InitialPattern
+	
+	if TypeDefinition%"Aliasable.Type.Definition.Incomplete" then
+		CurrentGrammar.InitialPattern = PEG.Apply(
+			PEG.Debug(TypeDefinition.Complete(Specifier)),
+			function(...)
+				CurrentGrammar.InitialPattern = ResumePattern
+				return ...
+			end
+		)
+	elseif TypeDefinition%"Aliasable.Type.Definition" then
+		CurrentGrammar.InitialPattern = PEG.Debug(
+			PEG.Apply(
+				PEG.Pattern(0),
+				function()
+					CurrentGrammar.InitialPattern = ResumePattern
+					return Specifier
+				end
+			)
+		)
+	end
+	return CurrentGrammar
 end
 
 return Basic.Namespace{
+	TypeSpecifier = Basic.Type.Definition(
+		PEG.Apply(
+			Construct.ChangeGrammar(
+				PEG.Apply(
+					PEG.Sequence{
+						Variable.Canonical"Types.Basic.Name.Target",
+						Static.GetEnvironment
+					},
+					GetSpecifierCompleter
+				)
+			),
+			function(Target, GeneratedTypes)
+				return {
+					Target = Target;
+					GeneratedTypes = GeneratedTypes;
+				}
+			end
+		)
+	);
+
 	Parameter = Basic.Type.Definition(
 		PEG.Table(
 			Construct.ArgumentList{
-				PEG.Group("Type", Variable.Canonical"Types.Basic.Name.Target"),
-				PEG.Group("Name", Variable.Canonical"Types.Basic.Name.Part")
+				PEG.Group(
+					"Specifier", Variable.Canonical"Types.Basic.Template.TypeSpecifier"
+				),
+				PEG.Group(
+					"Name", Variable.Canonical"Types.Basic.Name.Part"
+				)
 			}
 		)
 	);
@@ -167,7 +240,7 @@ return Basic.Namespace{
 	);
 
 	Declaration = Basic.Type.Definition(
-		Construct.DynamicParse(
+		Construct.ChangeGrammar(
 			Construct.Invocation(
 				"Template",
 				Construct.ArgumentList{

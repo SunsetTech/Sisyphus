@@ -1,4 +1,4 @@
-local lpeg = require"lpeg"
+local Tools = require"Toolbox.Tools"
 local Import = require"Toolbox.Import"
 
 local Object = Import.Module.Relative"Object"
@@ -14,7 +14,7 @@ local PEG = {
 return Object(
 	"Nested.PEG.Select", {
 		Construct = function(self, Options)
-			self.Options = Array("Nested.PEG", Options)
+			self.Options = Tools.Error.NotMine(Array,"Nested.PEG", Options)
 		end;
 		
 		Decompose = function(self, Canonical)

@@ -31,6 +31,22 @@ Package = {
 			end
 		)
 	end;
+	
+	ChangeGrammar = function(Pattern)
+		return Package.DynamicParse(
+			PEG.Apply(
+				PEG.Sequence{Pattern, Static.GetEnvironment}, 
+				function(NewGrammar, Environment)
+					Tools.Error.CallerAssert(NewGrammar%"Aliasable.Grammar")
+					return 
+						NewGrammar/"userdata", {
+							Grammar = NewGrammar;
+							Variables = Tools.Table.Copy(Environment.Variables);
+						}
+				end
+			)
+		)
+	end;
 
 	Invocation = function(Disambiguator, Pattern, Function)
 		return PEG.Apply(
@@ -63,6 +79,22 @@ Package = {
 		return Joiner{Pattern, PEG.All(Joiner{Seperator, Pattern})}
 	end;
 	
+	TypeArgument = function(Canonical)
+		return PEG.Select{
+			Variable.Canonical(
+				CanonicalName(
+					Canonical,
+					CanonicalName"Types.Aliasable"
+				)
+			),
+			PEG.Sequence{
+				PEG.Group(PEG.Constant(Canonical), "Basetype"),
+				Variable.Canonical"Types.Basic.BaseTemplates",
+				PEG.Group(PEG.Constant(nil), "Basetype")
+			}
+		}
+	end;
+
 	ArgumentArray = function(ArgumentPattern)
 		return Package.Delimited(
 			PEG.Pattern"<",

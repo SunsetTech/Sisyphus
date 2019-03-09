@@ -1,3 +1,12 @@
-@File"Modifier/B.sph"
-@File"Modifier/C.sph"
-:Join<::A"1" ::B"2" ::C"3">
+@File"Templates/B.sph"
+@File"Templates/C.sph"
+@File"Templates/ArrayTest.sph"
+:Join<
+	::A"1" 
+	::B"2" 
+	::C"3" 
+	::ArrayTest<
+		<"blah" ":" "bluh"> 
+		<"A" "=" "B">
+	>
+>
