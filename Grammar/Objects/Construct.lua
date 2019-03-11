@@ -3,7 +3,9 @@ local Import = require"Toolbox.Import"
 
 local Vlpeg = require"Sisyphus.Vlpeg"
 local Compiler = require"Sisyphus.Compiler"
+local CanonicalName = Compiler.Objects.CanonicalName
 local PEG = Compiler.Objects.Nested.PEG
+local Variable = PEG.Variable
 
 local Syntax = Import.Module.Sister"Syntax"
 local Static = Import.Module.Sister"Static"
@@ -79,17 +81,26 @@ Package = {
 		return Joiner{Pattern, PEG.All(Joiner{Seperator, Pattern})}
 	end;
 	
-	TypeArgument = function(Canonical)
+	BasicNamespace = function(Name)
+		return Variable.Canonical(
+			CanonicalName(
+				Name,
+				CanonicalName"Types.Basic"
+			)()
+		)
+	end;
+
+	AliasableType = function(Name)
 		return PEG.Select{
 			Variable.Canonical(
 				CanonicalName(
-					Canonical,
+					Name,
 					CanonicalName"Types.Aliasable"
-				)
+				)()
 			),
 			PEG.Sequence{
-				PEG.Group(PEG.Constant(Canonical), "Basetype"),
-				Variable.Canonical"Types.Basic.BaseTemplates",
+				PEG.Group(PEG.Constant(Name), "Basetype"),
+				Package.BasicNamespace"Root.Types.Templates",
 				PEG.Group(PEG.Constant(nil), "Basetype")
 			}
 		}

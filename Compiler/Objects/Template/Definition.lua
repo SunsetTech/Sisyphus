@@ -1,3 +1,6 @@
+local Tools = require"Toolbox.Tools"
+local type = Tools.Type.GetType
+
 local Import = require"Toolbox.Import"
 
 local Object = Import.Module.Relative"Object"
@@ -5,18 +8,15 @@ local Aliasable = Import.Module.Relative"Objects.Aliasable"
 
 return Object(
 	"Template.Definition", {
-		Construct = function(self, Basetype, Pattern, Function)
+		Construct = function(self, Basetype, Definition)
 			assert(Basetype)
+			assert(type(Definition) == "Sisyphus.Compiler.Object" and Definition%"Aliasable.Type.Definition", "Expected Aliasable.Type.Definition")
 			self.Basetype = Basetype
-			self.Pattern = Pattern
-			self.Function = Function
+			self.Definition = Definition
 		end;
 
 		Decompose = function(self)
-			return Aliasable.Type.Definition(
-				self.Pattern,
-				self.Function
-			)
+			return self.Definition
 		end;
 	}
 )

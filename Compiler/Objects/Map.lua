@@ -28,7 +28,7 @@ return Object(
 				end
 				Tools.Error.CallerAssert(
 					TypeCheck, 
-					Format"Expected (%s), got %s"(table.concat(self.Types,", "), type(Entry))
+					Format"Expected (%s), got %s"(table.concat(self.Types,", "), #Entry)
 				)
 				Decomposed[Key] = Entry()
 			end

@@ -1,6 +1,8 @@
 local Module = require"Toolbox.Import.Module"
 
 return {
+	Stored = Module.Child"Stored";
+	Constant = Module.Child"Constant";
 	Immediate = Module.Child"Immediate";
 	Sequence = Module.Child"Sequence";
 	Variable = Module.Child"Variable";

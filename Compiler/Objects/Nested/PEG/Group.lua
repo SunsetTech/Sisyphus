@@ -1,3 +1,4 @@
+local Tools = require"Toolbox.Tools"
 local Import = require"Toolbox.Import"
 
 local Vlpeg = Import.Module.Relative"Vlpeg"
@@ -5,7 +6,8 @@ local Object = Import.Module.Relative"Object"
 
 return Object(
 	"Nested.PEG.Group", {
-		Construct = function(self, Name, InnerPattern)
+		Construct = function(self, InnerPattern, Name)
+			Tools.Error.CallerAssert(type(InnerPattern) ~= "string", "huh")
 			self.Name = Name
 			self.InnerPattern = InnerPattern
 		end;
@@ -15,7 +17,7 @@ return Object(
 		end;
 		
 		Copy = function(self)
-			return self.Name, -self.InnerPattern
+			return -self.InnerPattern, self.Name
 		end;
 
 		ToString = function(self)

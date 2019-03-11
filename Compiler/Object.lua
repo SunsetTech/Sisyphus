@@ -40,8 +40,10 @@ return setmetatable(
 				return setmetatable(
 					Data,
 					{
-						__type = Typename;
-						
+						__type = "Sisyphus.Compiler.Object";
+						__len = function(self)
+							return Typename
+						end;
 						__call = function(self, ...) --Decompose
 							--DebugOutput:Format"Decomposing a %s"(type(self))
 							--DebugOutput:Push()
@@ -110,7 +112,14 @@ return setmetatable(
 						
 						__div = function(self, Type) -- /"Type" Iteratively decomposes until it's of Type
 							local Decomposed = self
-							while(type(Decomposed) ~= Type) do
+							local function GetType()
+								if type(Decomposed) == "Sisyphus.Compiler.Object" then
+									return #Decomposed
+								else
+									return type(Decomposed)
+								end
+							end
+							while(GetType() ~= Type) do
 								Decomposed = Tools.Error.NotMine(Decomposed)
 							end
 							return Decomposed

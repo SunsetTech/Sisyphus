@@ -47,12 +47,7 @@ local function CreateArgumentsPattern(Parameters)
 	local ArgumentPatterns = {}
 
 	for Index, Parameter in pairs(Parameters) do
-		ArgumentPatterns[Index] = Variable.Canonical(
-			Compiler.Objects.CanonicalName(
-				InvertName(Parameter.Specifier.Target)(), 
-				Compiler.Objects.CanonicalName"Types.Aliasable"
-			)()
-		)
+		ArgumentPatterns[Index] = Construct.AliasableType(InvertName(Parameter.Specifier.Target)())
 	end
 
 	return Construct.ArgumentList(ArgumentPatterns)
@@ -64,26 +59,28 @@ function DefinitionGenerator(Basetype, Name, Parameters, GeneratedTypes)
 			CreateNamespaceFor(
 				Template.Definition(
 					Basetype,
-					PEG.Sequence{
-						Static.GetEnvironment,
-						Syntax.Tokens{
-							PEG.Optional(PEG.Pattern(Name.Name)),
-							CreateArgumentsPattern(Parameters),
-						}
-					},
-					function(Environment, ...)
-						local Arguments = {...}
-						local OldValues = {}
-						for Index, Parameter in pairs(Parameters) do
-							Environment.Variables[Parameter.Name] = Arguments[Index]
-							OldValues[Parameter.Name] = Environment.Variables[Parameter.Name]
+					Aliasable.Type.Definition(
+						PEG.Sequence{
+							Static.GetEnvironment,
+							Syntax.Tokens{
+								PEG.Optional(PEG.Pattern(Name.Name)),
+								CreateArgumentsPattern(Parameters),
+							}
+						},
+						function(Environment, ...)
+							local Arguments = {...}
+							local OldValues = {}
+							for Index, Parameter in pairs(Parameters) do
+								Environment.Variables[Parameter.Name] = Arguments[Index]
+								OldValues[Parameter.Name] = Environment.Variables[Parameter.Name]
+							end
+							local Returns = {Finish(Environment)}
+							for Name, Value in pairs(OldValues) do
+								Environment.Variables[Name] = Value
+							end
+							return table.unpack(Returns)
 						end
-						local Returns = {Finish(Environment)}
-						for Name, Value in pairs(OldValues) do
-							Environment.Variables[Name] = Value
-						end
-						return table.unpack(Returns)
-					end
+					)
 				),
 				Name
 			),
@@ -120,8 +117,10 @@ local function GetParameterTypes(Parameters)
 		end
 		Variables.Children.Entries[Parameter.Name] = Template.Definition(
 			Parameter.Specifier.Target,
-			PEG.Debug(PEG.Pattern(Parameter.Name)),
-			CreateValueLookup(Parameter.Name)
+			Aliasable.Type.Definition(
+				PEG.Debug(PEG.Pattern(Parameter.Name)),
+				CreateValueLookup(Parameter.Name)
+			)
 		);
 	end
 
@@ -150,7 +149,11 @@ local function GenerateDefinitionGrammar(Name, Parameters, Basetype, Environment
 	
 	DefinitionGrammar.InitialPattern = PEG.Apply( --Edit the initial pattern to match Basetype
 		PEG.Apply(
-			PEG.Debug(Variable.Canonical(BasetypeRule)), --The returns matching the type, either values or a resolvable representing the unfinished transform
+			PEG.Debug(
+				Construct.Centered(
+					Construct.AliasableType(InvertName(Basetype)())
+				)
+			), --The returns matching the type, either values or a resolvable representing the unfinished transform
 			BoxReturns
 		),
 		DefinitionGenerator(Basetype, Name, Parameters, GeneratedTypes)
@@ -222,10 +225,10 @@ return Basic.Namespace{
 		PEG.Table(
 			Construct.ArgumentList{
 				PEG.Group(
-					"Specifier", Variable.Canonical"Types.Basic.Template.TypeSpecifier"
+					Variable.Canonical"Types.Basic.Template.TypeSpecifier", "Specifier"
 				),
 				PEG.Group(
-					"Name", Variable.Canonical"Types.Basic.Name.Part"
+					Variable.Canonical"Types.Basic.Name.Part", "Name"
 				)
 			}
 		)

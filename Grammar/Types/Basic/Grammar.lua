@@ -45,7 +45,7 @@ return Basic.Type.Set{
 		File = Basic.Type.Definition(
 			Construct.Invocation(
 				"File",
-				Construct.ArgumentList{Variable.Canonical"Types.Aliasable.Data.String"},
+				Construct.ArgumentList{Construct.AliasableType"Data.String"},
 				function(Filename, Environment)
 					local CurrentGrammar = Environment.Grammar
 

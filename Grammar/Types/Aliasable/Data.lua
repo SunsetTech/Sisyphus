@@ -36,6 +36,16 @@ local function InvertName(Canonical)
 end
 
 return Aliasable.Namespace {
+	Boolean = Aliasable.Type.Definition(
+		PEG.Select{
+			PEG.Sequence{PEG.Pattern"true", PEG.Constant(true)},
+			PEG.Sequence{PEG.Pattern"false", PEG.Constant(false)}
+		},
+		function(...)
+			return ...
+		end
+	);
+
 	String = Aliasable.Type.Definition(
 		Variable.Child"Syntax",
 		function(...)
@@ -58,10 +68,11 @@ return Aliasable.Namespace {
 	);
 
 	Array = Incomplete(
+		PEG.Pattern"Array",
 		function(Canonical)--Array<TypeSpecifier>
 			Canonical = InvertName(Canonical)
-			return PEG.Debug(PEG.Apply(
-				PEG.Debug(Construct.ArgumentList{PEG.Debug(Variable.Canonical"Types.Basic.Template.TypeSpecifier")}),
+			return PEG.Apply(
+				Construct.ArgumentList{Variable.Canonical"Types.Basic.Template.TypeSpecifier"},
 				function(Specifier) -- Generate the match Specifier and the Added Types
 					local GeneratedTypes = Aliasable.Namespace()
 
@@ -74,14 +85,9 @@ return Aliasable.Namespace {
 					
 					local Namespace = CreateNamespaceFor(
 						Aliasable.Type.Definition(
-							PEG.Debug(Construct.ArgumentArray(
-								PEG.Debug(Variable.Canonical(
-									CanonicalName(
-										InvertName(Specifier.Target)(),
-										CanonicalName"Types.Aliasable"
-									)()
-								))
-							)),
+							Construct.ArgumentArray(
+								Construct.AliasableType(InvertName(Specifier.Target)())
+							),
 							function(...)
 								return {...}
 							end
@@ -93,7 +99,7 @@ return Aliasable.Namespace {
 						GeneratedTypes
 						+ Namespace
 				end
-			))
+			)
 		end
 	);
 }

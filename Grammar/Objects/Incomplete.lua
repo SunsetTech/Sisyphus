@@ -11,15 +11,17 @@ local Aliasable = Compiler.Objects.Aliasable
 
 local Construct = Import.Module.Relative"Objects.Construct"
 local Static = Import.Module.Relative"Objects.Static"
+local Syntax = Import.Module.Relative"Objects.Syntax"
 
 return Object(
 	"Aliasable.Type.Definition.Incomplete", {
-		Construct = function(self, Complete, Syntax, AliasableTypes, BasicTypes, Canonical)
+		Construct = function(self, Pattern, Complete, Syntax, AliasableTypes, BasicTypes, Canonical)
 			self.Complete = Complete
+			self.Pattern = Pattern or PEG.Pattern(true)
 			self.Syntax = Syntax or Nested.Grammar()
 			self.AliasableTypes = AliasableTypes or Aliasable.Namespace()
 			self.BasicTypes = BasicTypes or Basic.Namespace()
-			self.Canonical = Canonical or CanonicalName"Error"
+			self.Canonical = Canonical or CanonicalName"__TemporaryInstance"
 		end;
 
 		Decompose = function(self)
@@ -27,13 +29,16 @@ return Object(
 				Construct.ChangeGrammar(
 					PEG.Apply(
 						PEG.Sequence{
-							self.Complete(self.Canonical),
+							Syntax.Tokens{
+								self.Pattern,
+								self.Complete(self.Canonical)
+							},
 							Static.GetEnvironment
 						},
 						function(Specifier, GeneratedTypes, Environment)
 							local CurrentGrammar = Environment.Grammar
-							return Grammar(
-								Variable.Canonical(Specifier),
+							return Aliasable.Grammar(
+								Construct.AliasableType(Specifier()),
 								CurrentGrammar.AliasableTypes + GeneratedTypes,
 								CurrentGrammar.BasicTypes,
 								CurrentGrammar.Syntax,
@@ -53,7 +58,7 @@ return Object(
 		end;
 
 		Copy = function(self)
-			return self.Complete, -self.Syntax, -self.AliasableTypes, -self.BasicTypes, -self.Canonical
+			return -self.Pattern, self.Complete, -self.Syntax, -self.AliasableTypes, -self.BasicTypes, -self.Canonical
 		end;
 	}
 )

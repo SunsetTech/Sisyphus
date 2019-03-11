@@ -12,6 +12,7 @@ return Basic.Namespace{
 	Name = Module.Child"Name";
 	Template = Module.Child"Template";
 	Grammar = Module.Child"Grammar";
+	Root = Module.Child"Root";
 
 	Modified = Basic.Type.Definition(
 		Construct.DynamicParse(
@@ -25,15 +26,6 @@ return Basic.Namespace{
 					}
 				end
 			)
-		)
-	);
-	
-	Root = Basic.Type.Definition(
-		Construct.Centered(
-			PEG.Select{
-				Variable.Canonical"Types.Basic.Modified",
-				Variable.Canonical"Types.Aliasable.Data.String"
-			}
 		)
 	);
 }
