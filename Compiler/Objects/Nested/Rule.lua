@@ -1,9 +1,8 @@
-local DebugOutput = require"Toolbox.Debug.Registry".GetDefaultPipe()
 
-local Import = require"Toolbox.Import"
-local Tools = require"Toolbox.Tools"
+local Import = require"Moonrise.Import"
+local Tools = require"Moonrise.Tools"
 
-local type = Tools.Type.GetType
+local type = Tools.Inspect.GetType
 
 local Object = Import.Module.Relative"Object"
 local CanonicalName = Import.Module.Relative"CanonicalName"

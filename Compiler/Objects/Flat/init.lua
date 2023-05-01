@@ -1,4 +1,4 @@
-local Import = require"Toolbox.Import"
+local Import = require"Moonrise.Import"
 
 return {
 	Grammar = Import.Module.Child"Grammar";

@@ -1,5 +1,5 @@
 local lpeg = require"lpeg"
-local Import = require"Toolbox.Import"
+local Import = require"Moonrise.Import"
 
 local Object = Import.Module.Relative"Object"
 local Vlpeg = Import.Module.Relative"Vlpeg"

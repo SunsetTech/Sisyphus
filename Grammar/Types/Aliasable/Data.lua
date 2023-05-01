@@ -1,6 +1,6 @@
-local Import = require"Toolbox.Import"
+local Import = require"Moonrise.Import"
 
-local Compiler = require"Sisyphus.Compiler"
+local Compiler = require"Sisyphus_Old.Compiler"
 
 local CanonicalName = Compiler.Objects.CanonicalName
 local Aliasable = Compiler.Objects.Aliasable

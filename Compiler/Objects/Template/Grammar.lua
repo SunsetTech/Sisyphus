@@ -1,6 +1,6 @@
-local Import = require"Toolbox.Import"
-local Tools = require"Toolbox.Tools"
-local type = Tools.Type.GetType
+local Import = require"Moonrise.Import"
+local Tools = require"Moonrise.Tools"
+local type = Tools.Inspect.GetType
 
 local Object = Import.Module.Relative"Object"
 local CanonicalName = Import.Module.Relative"Objects.CanonicalName"
@@ -59,12 +59,14 @@ return Object(
 				CanonicalName"Types.Aliasable.Templates"
 			)
 
-			Copy.AliasableTypes.Children.Entries.Templates =
+			Copy.AliasableTypes.Children:Add(
+				"Templates",
 				Aliasable.Namespace()
 				+ {
 					(Copy.AliasableTypes.Children.Entries.Templates or Aliasable.Namespace()),
 					self.Templates()
 				}
+			)
 			
 			return Copy
 		end;

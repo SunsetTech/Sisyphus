@@ -1,5 +1,5 @@
-local Tools = require"Toolbox.Tools"
-local Import = require"Toolbox.Import"
+local Tools = require"Moonrise.Tools"
+local Import = require"Moonrise.Import"
 
 local Object = Import.Module.Relative"Object"
 local Array = Import.Module.Relative"Objects.Array"

@@ -1,6 +1,6 @@
-local type = require"Toolbox.Utilities.Type".GetType
+local type = require"Moonrise.Tools.Inspect".GetType
 
-local Import = require"Toolbox.Import"
+local Import = require"Moonrise.Import"
 local Object = Import.Module.Relative"Object"
 local Nested = Import.Module.Relative"Objects.Nested"
 

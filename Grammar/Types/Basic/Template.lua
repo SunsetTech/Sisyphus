@@ -88,7 +88,9 @@ function DefinitionGenerator(Basetype, Name, Parameters, GeneratedTypes)
 	end
 end
 
-local function BoxReturns(...)
+---fuck how do we even annotate this
+---@param ... any
+local function BoxReturns(...) -- I forget why this was necessary
 	return Compiler.Transform.Incomplete(
 		{...},
 		function(...)
@@ -115,11 +117,13 @@ local function GetParameterTypes(Parameters)
 		if Parameter.Specifier.GeneratedTypes then
 			GeneratedTypes = GeneratedTypes + Parameter.Specifier.GeneratedTypes
 		end
-		Variables.Children.Entries[Parameter.Name] = Template.Definition(
-			Parameter.Specifier.Target,
-			Aliasable.Type.Definition(
-				PEG.Debug(PEG.Pattern(Parameter.Name)),
-				CreateValueLookup(Parameter.Name)
+		Variables.Children:Add(
+			Parameter.Name, Template.Definition(
+				Parameter.Specifier.Target,
+				Aliasable.Type.Definition(
+					PEG.Debug(PEG.Pattern(Parameter.Name)),
+					CreateValueLookup(Parameter.Name)
+				)
 			)
 		);
 	end
@@ -143,7 +147,9 @@ local function GenerateDefinitionGrammar(Name, Parameters, Basetype, Environment
 		Template.Namespace{
 			Variables = Variables;
 		}
-	)/"Aliasable.Grammar"
+	)
+	print(DefinitionGrammar)
+	DefinitionGrammar = DefinitionGrammar/"Aliasable.Grammar"
 
 	local BasetypeRule = CanonicalName(InvertName(Basetype)(), CanonicalName"Types.Aliasable")()
 	

@@ -1,4 +1,4 @@
-local Import = require"Toolbox.Import"
+local Import = require"Moonrise.Import"
 
 local Object = Import.Module.Relative"Object"
 local Map = Import.Module.Relative"Objects.Map"
@@ -6,9 +6,13 @@ local Basic = Import.Module.Relative"Objects.Basic"
 
 return Object(
 	"Aliasable.Namespace", {
-		Construct = function(self, Children, Base)
+		Construct = function(self, Children, Base, _Children)
 			self.Base = Base or Basic.Namespace()
-			self.Children = Map({"Aliasable.Namespace", "Aliasable.Type.Definition"}, Children or {})
+			if _Children then 
+				self.Children = _Children
+			else
+				self.Children = Map({"Aliasable.Namespace", "Aliasable.Type.Definition"}, Children)
+			end
 		end;
 
 		Decompose = function(self) -- into a Basic.Namespace
@@ -18,7 +22,7 @@ return Object(
 		end;
 
 		Copy = function(self)
-			return (-self.Children).Entries, -self.Base
+			return nil, -self.Base, -self.Children
 		end;
 
 		Merge = function(Into, From)

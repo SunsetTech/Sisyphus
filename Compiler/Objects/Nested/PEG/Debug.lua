@@ -1,8 +1,6 @@
-local DebugOutput = require"Toolbox.Debug.Registry".GetDefaultPipe()
+local Tools = require"Moonrise.Tools"
 
-local Tools = require"Toolbox.Tools"
-
-local Import = require"Toolbox.Import"
+local Import = require"Moonrise.Import"
 
 local Vlpeg = Import.Module.Relative"Vlpeg"
 
@@ -20,9 +18,9 @@ return Object(
 					Vlpeg.Immediate(
 						Vlpeg.Pattern(0),
 						function(Subject, Pos)
-							DebugOutput:Format"trying to match %s"(self.SubPattern)
+							--[[DebugOutput:Format"trying to match %s"(self.SubPattern)
 							DebugOutput:Format"  At `\27[4m\27[30m%s\27[0m..`"(Subject:sub(Pos, Pos+20):gsub("\n","\27[4m\27[7m \27[0m\27[30m\27[4m"))
-							DebugOutput:Push()
+							DebugOutput:Push()]]
 							return Pos
 						end
 					),
@@ -30,8 +28,8 @@ return Object(
 					Vlpeg.Immediate(
 						Vlpeg.Pattern(0),
 						function(_,Pos)
-							DebugOutput:Pop()
-							DebugOutput:Add"Success"
+							--[[DebugOutput:Pop()
+							DebugOutput:Add"Success"]]
 							return Pos
 						end
 					)
@@ -39,8 +37,8 @@ return Object(
 				Vlpeg.Immediate(
 					Vlpeg.Pattern(0),
 					function()
-						DebugOutput:Pop()
-						DebugOutput:Add"Failed"
+						--[[DebugOutput:Pop()
+						DebugOutput:Add"Failed"]]
 						return false
 					end
 				) * (Vlpeg.Pattern(1) - Vlpeg.Pattern(1))

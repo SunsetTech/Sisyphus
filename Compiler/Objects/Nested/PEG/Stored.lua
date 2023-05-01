@@ -1,5 +1,5 @@
-local Vlpeg = require"Sisyphus.Vlpeg"
-local Import = require"Toolbox.Import"
+local Vlpeg = require"Sisyphus_Old.Vlpeg"
+local Import = require"Moonrise.Import"
 
 local Object = Import.Module.Relative"Object"
 

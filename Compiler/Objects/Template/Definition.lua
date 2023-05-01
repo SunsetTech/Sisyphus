@@ -1,7 +1,7 @@
-local Tools = require"Toolbox.Tools"
-local type = Tools.Type.GetType
+local Tools = require"Moonrise.Tools"
+local type = Tools.Inspect.GetType
 
-local Import = require"Toolbox.Import"
+local Import = require"Moonrise.Import"
 
 local Object = Import.Module.Relative"Object"
 local Aliasable = Import.Module.Relative"Objects.Aliasable"

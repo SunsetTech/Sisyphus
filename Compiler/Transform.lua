@@ -1,5 +1,5 @@
-local Tools = require"Toolbox.Tools"
-local type = Tools.Type.GetType
+local Tools = require"Moonrise.Tools"
+local type = Tools.Inspect.GetType
 
 local Package
 
@@ -22,7 +22,7 @@ Package = {
 	Incomplete = function(Arguments, Function)
 		return Package.Resolvable(
 			function(Environment)
-				Tools.Error.CallerAssert(type(Environment) == "table", "oops")
+				--Tools.Error.CallerAssert(type(Environment) == "table", "oops")
 				local CurrentArguments = {}
 				for Index, Argument in pairs(Arguments) do
 					local Type = type(Argument)

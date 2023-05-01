@@ -1,5 +1,5 @@
-local Import = require"Toolbox.Import"
-local Tools = require"Toolbox.Tools"
+local Import = require"Moonrise.Import"
+local Tools = require"Moonrise.Tools"
 local Object = Import.Module.Relative"Object"
 
 return Object(
@@ -8,18 +8,21 @@ return Object(
 			assert(Items)
 			self.Type = Type
 			self.Items = Items
-			for Index, Item in pairs(self.Items) do
-				Tools.Error.CallerAssert(type(Index) == "number", "Expected a numeric index, got ".. Index)
-				Tools.Error.CallerAssert(Item%(self.Type), "Expected a ".. self.Type)
+			--for Index, Item in pairs(self.Items) do
+			for Index = 1, #self.Items do
+				local Item = self.Items[Index]
+				--Tools.Error.CallerAssert(type(Index) == "number", "Expected a numeric index, got ".. Index)
+				--Tools.Error.CallerAssert(Item%(self.Type), "Expected a ".. self.Type)
 			end
 		end;
 
 		Decompose = function(self, ...)
 			local Decomposed = {}
 			
-			for Index, Item in pairs(self.Items) do
-				Tools.Error.CallerAssert(type(Index) == "number", "Expected a numeric index, got ".. Index)
-				Tools.Error.CallerAssert(Item%(self.Type), "Expected a ".. self.Type)
+			for Index = 1, #self.Items do
+				local Item = self.Items[Index]
+				--Tools.Error.CallerAssert(type(Index) == "number", "Expected a numeric index, got ".. Index)
+				--Tools.Error.CallerAssert(Item%(self.Type), "Expected a ".. self.Type)
 			
 				Decomposed[Index] = Item(...)
 			end
@@ -30,7 +33,8 @@ return Object(
 		Copy = function(self)
 			local ItemsCopy = {}
 			
-			for Index, Item in pairs(self.Items) do
+			for Index = 1, #self.Items do
+				local Item = self.Items[Index]
 				ItemsCopy[Index] = -Item
 			end
 			

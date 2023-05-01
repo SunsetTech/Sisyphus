@@ -1,4 +1,4 @@
-local Import = require"Toolbox.Import"
+local Import = require"Moonrise.Import"
 
 local Object = Import.Module.Relative"Object"
 local Map = Import.Module.Relative"Objects.Map"
@@ -8,8 +8,12 @@ local Variable = PEG.Variable
 
 return Object(
 	"Basic.Type.Set", {
-		Construct = function(self, Children)
-			self.Children = Map({"Basic.Type.Definition", "Basic.Type.Set"}, Children or {})
+		Construct = function(self, Children, _Children)
+			if _Children then 
+				self.Children = _Children
+			else
+				self.Children = Map({"Basic.Type.Definition", "Basic.Type.Set"}, Children or {})
+			end
 		end;
 
 		Decompose = function(self)
@@ -27,7 +31,7 @@ return Object(
 		end;
 
 		Copy = function(self)
-			return (-self.Children).Entries
+			return nil, (-self.Children)
 		end;
 	}
 )

@@ -1,20 +1,33 @@
-local Import = require"Toolbox.Import"
-local Tools = require"Toolbox.Tools"
-local type = Tools.Type.GetType
+local Import = require"Moonrise.Import"
+local Tools = require"Moonrise.Tools"
+local OrderedMap=require"Moonrise.Object.OrderedMap"
+local type = Tools.Inspect.GetType
 local Format = Tools.String.Format
 
 local Object = Import.Module.Relative"Object"
 
+local function print_caller_info()
+    local info = debug.getinfo(4, "Sl") -- Get the caller's caller info (2 levels up)
+    if info then
+        print(string.format("Called from file %s at line %d", info.short_src, info.currentline))
+    else
+        print("Could not get caller information.")
+    end
+end
 return Object(
 	"Map", {
-		Construct = function(self, Types, Entries)
+		Construct = function(self, Types, Entries, _Entries)
+			--print_caller_info()
 			self.Types =
 				type(Types) == "string"
 				and {Types}
 				or Types
-			self.Entries = Entries
+			--self.Entries = setmetatable(Entries, {__newindex=function(_,k,v) print(k,v) print_caller_info() rawset(Entries, k, v) end;})
+			self.Entries = Entries or {}
 		end;
-
+		Add = function(self, Key, Value)
+			self.Entries[Key] = Value
+		end;
 		Decompose = function(self)
 			local Decomposed = {}
 
@@ -26,10 +39,10 @@ return Object(
 						break
 					end
 				end
-				Tools.Error.CallerAssert(
+				--[[Tools.Error.CallerAssert(
 					TypeCheck, 
-					Format"Expected (%s), got %s"(table.concat(self.Types,", "), #Entry)
-				)
+					Format"Expected (%s), got %s"(table.concat(self.Types,", "), getmetatable(Entry).__typename)
+				)]]
 				Decomposed[Key] = Entry()
 			end
 

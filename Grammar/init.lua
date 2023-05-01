@@ -1,7 +1,7 @@
-local Module = require"Toolbox.Import.Module"
+local Module = require"Moonrise.Import.Module"
 
-local Vlpeg = require"Sisyphus.Vlpeg"
-local Compiler = require"Sisyphus.Compiler"
+local Vlpeg = require"Sisyphus_Old.Vlpeg"
+local Compiler = require"Sisyphus_Old.Compiler"
 local PEG = Compiler.Objects.Nested.PEG
 local Variable = PEG.Variable
 local Template = Compiler.Objects.Template

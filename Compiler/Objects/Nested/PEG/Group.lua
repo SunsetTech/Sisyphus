@@ -1,5 +1,5 @@
-local Tools = require"Toolbox.Tools"
-local Import = require"Toolbox.Import"
+local Tools = require"Moonrise.Tools"
+local Import = require"Moonrise.Import"
 
 local Vlpeg = Import.Module.Relative"Vlpeg"
 local Object = Import.Module.Relative"Object"
@@ -7,7 +7,7 @@ local Object = Import.Module.Relative"Object"
 return Object(
 	"Nested.PEG.Group", {
 		Construct = function(self, InnerPattern, Name)
-			Tools.Error.CallerAssert(type(InnerPattern) ~= "string", "huh")
+			--Tools.Error.CallerAssert(type(InnerPattern) ~= "string", "huh")
 			self.Name = Name
 			self.InnerPattern = InnerPattern
 		end;

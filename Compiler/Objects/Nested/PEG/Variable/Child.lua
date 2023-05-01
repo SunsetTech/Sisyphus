@@ -1,6 +1,6 @@
-local Vlpeg = require"Sisyphus.Vlpeg"
+local Vlpeg = require"Sisyphus_Old.Vlpeg"
 
-local Import = require"Toolbox.Import"
+local Import = require"Moonrise.Import"
 local Object = Import.Module.Relative"Object"
 local CanonicalName = Import.Module.Relative"CanonicalName"
 

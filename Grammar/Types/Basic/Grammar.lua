@@ -1,10 +1,10 @@
 local posix = require"posix"
 
-local Tools = require"Toolbox.Tools"
-local Import = require"Toolbox.Import"
+local Tools = require"Moonrise.Tools"
+local Import = require"Moonrise.Import"
 
-local Vlpeg = require"Sisyphus.Vlpeg"
-local Compiler = require"Sisyphus.Compiler"
+local Vlpeg = require"Sisyphus_Old.Vlpeg"
+local Compiler = require"Sisyphus_Old.Compiler"
 local Template = Compiler.Objects.Template
 local Aliasable = Compiler.Objects.Aliasable
 local Basic = Compiler.Objects.Basic
